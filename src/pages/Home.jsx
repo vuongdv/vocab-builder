@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
-import { HiLogout, HiSearch } from 'react-icons/hi';
+import { HiSearch } from 'react-icons/hi';
 import WordForm from '../components/WordForm';
 import WordList from '../components/WordList';
+import Navbar from '../components/Navbar';
 import './Home.css';
 
 export default function Home() {
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [words, setWords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterPos, setFilterPos] = useState(''); // State lọc theo Loại từ
   
   // State quản lý số lượng từ vựng hiển thị trên giao diện
   const [visibleCount, setVisibleCount] = useState(20);
@@ -58,22 +58,16 @@ export default function Home() {
     return () => unsubscribe();
   }, [currentUser]);
 
-  async function handleLogout() {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      console.error('Failed to log out', error);
-    }
-  }
-
-  // Lọc từ vựng dựa trên searchTerm (tìm theo từ tiếng Anh hoặc nghĩa tiếng Việt)
+  // Lọc từ vựng dựa trên searchTerm và Loại từ (Part of Speech)
   const filteredWords = words.filter(w => {
-    const term = searchTerm.toLowerCase();
-    return (
-      w.word.toLowerCase().includes(term) ||
-      w.viMeaning.toLowerCase().includes(term)
-    );
+    const termMatches = 
+      w.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      w.viMeaning.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Nếu có chọn filterPos thì bắt buộc phải khớp
+    const posMatches = filterPos === '' || w.partOfSpeech === filterPos;
+
+    return termMatches && posMatches;
   });
 
   // Chỉ lấy ra số thẻ bằng với visibleCount để render lên màn hình
@@ -81,17 +75,7 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      <header className="home-header glass-panel">
-        <div className="header-content">
-          <h1 className="logo-title">VocabBuilder 🚀</h1>
-          <div className="user-info">
-            <span className="user-email">{currentUser.email}</span>
-            <button className="btn-icon logout-btn" onClick={handleLogout} title="Logout">
-              <HiLogout size={22} />
-            </button>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="main-content">
         <section className="top-section">
@@ -102,17 +86,37 @@ export default function Home() {
         <section className="list-section">
           <div className="list-header">
             <h2>Your Vocabulary ({filteredWords.length})</h2>
-            <div className="search-bar">
-              <HiSearch className="search-icon" />
-              <input 
-                type="text" 
-                placeholder="Search English or Vietnamese..." 
-                value={searchTerm}
+            <div className="filters-container">
+              <div className="search-bar">
+                <HiSearch className="search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Search ..." 
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setVisibleCount(20); // Reset số lượng hiển thị khi tìm kiếm
+                  }}
+                />
+              </div>
+              <select 
+                className="filter-select"
+                value={filterPos}
                 onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setVisibleCount(20); // Reset số lượng hiển thị khi tìm kiếm
+                  setFilterPos(e.target.value);
+                  setVisibleCount(20);
                 }}
-              />
+              >
+                <option value="">All Parts of Speech</option>
+                <option value="Noun (n)">Noun (n)</option>
+                <option value="Verb (v)">Verb (v)</option>
+                <option value="Adjective (adj)">Adjective (adj)</option>
+                <option value="Adverb (adv)">Adverb (adv)</option>
+                <option value="Pronoun (pron)">Pronoun (pron)</option>
+                <option value="Preposition (prep)">Preposition (prep)</option>
+                <option value="Idiom">Idiom / Phrase</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
           
