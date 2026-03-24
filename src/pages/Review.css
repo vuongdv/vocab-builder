@@ -95,16 +95,10 @@
   text-transform: uppercase;
 }
 
-.speak-btn-large {
+.speak-buttons-container {
   position: absolute;
-  top: 30px;
-  right: 30px;
-  color: var(--text-secondary);
-}
-
-.speak-btn-large:hover {
-  color: var(--accent-color);
-  transform: scale(1.1);
+  top: 20px;
+  right: 20px;
 }
 
 .card-word-large {

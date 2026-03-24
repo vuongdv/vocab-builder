@@ -1,0 +1,60 @@
+.pronunciation-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pronunciation-buttons-large {
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.play-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.pronunciation-buttons-large .play-btn {
+  padding: 8px 16px;
+  border-radius: 16px;
+}
+
+.accent-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.pronunciation-buttons-large .accent-label {
+  font-size: 0.9rem;
+}
+
+/* Styling similar to Longman Dictionary (Red for UK, Blue for US) */
+.play-uk {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #DC2626; /* Red for UK */
+}
+
+.play-uk:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+}
+
+.play-us {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: #2563EB; /* Blue for US */
+}
+
+.play-us:hover {
+  background-color: rgba(37, 99, 235, 0.2);
+}
+
+.play-uk .accent-label,
+.play-us .accent-label {
+  color: inherit;
+}

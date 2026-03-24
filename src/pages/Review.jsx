@@ -4,6 +4,7 @@ import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import { HiOutlineVolumeUp, HiArrowRight, HiArrowLeft, HiRefresh } from 'react-icons/hi';
+import PronunciationButtons from '../components/PronunciationButtons';
 import './Review.css';
 
 export default function Review() {
@@ -32,12 +33,6 @@ export default function Review() {
 
     return () => unsubscribe();
   }, [currentUser]);
-
-  const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    window.speechSynthesis.speak(utterance);
-  };
 
   const nextCard = () => {
     setIsFlipped(false);
@@ -102,13 +97,9 @@ export default function Review() {
             {/* Front of the card (English) */}
             <div className="flashcard-face flashcard-front glass-panel">
               <span className="tap-hint">Tap to flip</span>
-              <button 
-                className="btn-icon speak-btn-large" 
-                onClick={(e) => { e.stopPropagation(); speak(currentWord.word); }}
-                title="Listen"
-              >
-                <HiOutlineVolumeUp size={36} />
-              </button>
+              <div className="speak-buttons-container">
+                <PronunciationButtons word={currentWord.word} size={24} isLarge={true} />
+              </div>
               <h2 className="card-word-large">{currentWord.word}</h2>
               {currentWord.partOfSpeech && (
                 <span className="word-pos-badge-large">{currentWord.partOfSpeech}</span>

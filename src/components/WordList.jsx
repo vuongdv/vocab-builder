@@ -4,6 +4,7 @@ import { db } from '../firebase';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import EditWordModal from './EditWordModal';
+import PronunciationButtons from './PronunciationButtons';
 
 export default function WordList({ words, loading }) {
   const [editingWord, setEditingWord] = useState(null);
@@ -19,12 +20,6 @@ export default function WordList({ words, loading }) {
       </div>
     );
   }
-
-  const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    window.speechSynthesis.speak(utterance);
-  };
 
   const handleDelete = async (wordId) => {
     if (window.confirm("Are you sure you want to delete this word?")) {
@@ -51,13 +46,7 @@ export default function WordList({ words, loading }) {
             </div>
             
             <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
-              <button 
-                className="btn-icon" 
-                onClick={() => speak(wordObj.word)}
-                title="Listen"
-              >
-                <HiOutlineVolumeUp size={20} />
-              </button>
+              <PronunciationButtons word={wordObj.word} size={20} />
               <button 
                 className="btn-icon" 
                 onClick={() => setEditingWord(wordObj)}
