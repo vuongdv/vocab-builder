@@ -10,6 +10,8 @@ export default function WordForm({ onWordAdded }) {
   const [viMeaning, setViMeaning] = useState('');
   const [explanation, setExplanation] = useState('');
   const [partOfSpeech, setPartOfSpeech] = useState('');
+  const [ukAudio, setUkAudio] = useState('');
+  const [usAudio, setUsAudio] = useState('');
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAuth();
 
@@ -25,6 +27,8 @@ export default function WordForm({ onWordAdded }) {
         word: word.trim(),
         partOfSpeech: partOfSpeech,
         pronunciation: pronunciation.trim(),
+        ukAudio: ukAudio.trim(),
+        usAudio: usAudio.trim(),
         enMeaning: enMeaning.trim(),
         viMeaning: viMeaning.trim(),
         explanation: explanation.trim(),
@@ -35,6 +39,8 @@ export default function WordForm({ onWordAdded }) {
       setWord('');
       setPronunciation('');
       setPartOfSpeech('');
+      setUkAudio('');
+      setUsAudio('');
       setEnMeaning('');
       setViMeaning('');
       setExplanation('');
@@ -108,6 +114,27 @@ export default function WordForm({ onWordAdded }) {
               value={enMeaning} 
               onChange={e => setEnMeaning(e.target.value)} 
               placeholder="e.g. seeming to be everywhere"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group flex-1">
+            <label>UK Audio MP3 URL</label>
+            <input 
+              type="text" 
+              value={ukAudio} 
+              onChange={e => setUkAudio(e.target.value)} 
+              placeholder="e.g. https://.../breProns/word.mp3"
+            />
+          </div>
+          <div className="form-group flex-1">
+            <label>US Audio MP3 URL</label>
+            <input 
+              type="text" 
+              value={usAudio} 
+              onChange={e => setUsAudio(e.target.value)} 
+              placeholder="e.g. https://.../ameProns/word.mp3"
             />
           </div>
         </div>

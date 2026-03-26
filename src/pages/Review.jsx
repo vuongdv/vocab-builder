@@ -98,7 +98,7 @@ export default function Review() {
             <div className="flashcard-face flashcard-front glass-panel">
               <span className="tap-hint">Tap to flip</span>
               <div className="speak-buttons-container">
-                <PronunciationButtons word={currentWord.word} size={24} isLarge={true} />
+                <PronunciationButtons wordObj={currentWord} size={24} isLarge={true} />
               </div>
               <h2 className="card-word-large">{currentWord.word}</h2>
               {currentWord.partOfSpeech && (

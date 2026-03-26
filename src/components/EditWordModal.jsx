@@ -11,6 +11,8 @@ export default function EditWordModal({ wordObj, onClose }) {
   const [viMeaning, setViMeaning] = useState(wordObj.viMeaning || '');
   const [explanation, setExplanation] = useState(wordObj.explanation || '');
   const [partOfSpeech, setPartOfSpeech] = useState(wordObj.partOfSpeech || '');
+  const [ukAudio, setUkAudio] = useState(wordObj.ukAudio || '');
+  const [usAudio, setUsAudio] = useState(wordObj.usAudio || '');
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAuth();
 
@@ -25,6 +27,8 @@ export default function EditWordModal({ wordObj, onClose }) {
         word: word.trim(),
         partOfSpeech: partOfSpeech,
         pronunciation: pronunciation.trim(),
+        ukAudio: ukAudio.trim(),
+        usAudio: usAudio.trim(),
         enMeaning: enMeaning.trim(),
         viMeaning: viMeaning.trim(),
         explanation: explanation.trim(),
@@ -74,6 +78,17 @@ export default function EditWordModal({ wordObj, onClose }) {
             <div className="form-group flex-1">
               <label>Vietnamese Meaning *</label>
               <input type="text" required value={viMeaning} onChange={e => setViMeaning(e.target.value)} />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group flex-1">
+              <label>UK Audio MP3 URL</label>
+              <input type="text" value={ukAudio} onChange={e => setUkAudio(e.target.value)} placeholder="UK MP3 Link" />
+            </div>
+            <div className="form-group flex-1">
+              <label>US Audio MP3 URL</label>
+              <input type="text" value={usAudio} onChange={e => setUsAudio(e.target.value)} placeholder="US MP3 Link" />
             </div>
           </div>
 

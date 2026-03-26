@@ -46,7 +46,7 @@ export default function WordList({ words, loading }) {
             </div>
             
             <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
-              <PronunciationButtons word={wordObj.word} size={20} />
+              <PronunciationButtons wordObj={wordObj} size={20} />
               <button 
                 className="btn-icon" 
                 onClick={() => setEditingWord(wordObj)}

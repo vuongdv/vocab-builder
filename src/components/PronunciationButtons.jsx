@@ -3,10 +3,10 @@ import { HiOutlineVolumeUp } from 'react-icons/hi';
 import { playAudio } from '../utils/audio';
 import './PronunciationButtons.css'; // We will create this for styling
 
-export default function PronunciationButtons({ word, size = 20, isLarge = false }) {
+export default function PronunciationButtons({ wordObj, size = 20, isLarge = false }) {
   const handlePlay = (e, accent) => {
     e.stopPropagation(); // prevent card flip if inside flashcard
-    playAudio(word, accent);
+    playAudio(wordObj, accent);
   };
 
   return (
