@@ -8,10 +8,10 @@ export default function WordForm({ onWordAdded }) {
   const [pronunciation, setPronunciation] = useState('');
   const [enMeaning, setEnMeaning] = useState('');
   const [viMeaning, setViMeaning] = useState('');
-  const [explanation, setExplanation] = useState('');
   const [partOfSpeech, setPartOfSpeech] = useState('');
   const [ukAudio, setUkAudio] = useState('');
   const [usAudio, setUsAudio] = useState('');
+  const [examples, setExamples] = useState([]);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAuth();
 
@@ -31,7 +31,7 @@ export default function WordForm({ onWordAdded }) {
         usAudio: usAudio.trim(),
         enMeaning: enMeaning.trim(),
         viMeaning: viMeaning.trim(),
-        explanation: explanation.trim(),
+        examples: examples.filter(ex => ex.text.trim() !== ''),
         createdAt: serverTimestamp()
       });
       
@@ -43,7 +43,7 @@ export default function WordForm({ onWordAdded }) {
       setUsAudio('');
       setEnMeaning('');
       setViMeaning('');
-      setExplanation('');
+      setExamples([]);
       
       if (onWordAdded) onWordAdded();
     } catch (error) {
@@ -140,13 +140,52 @@ export default function WordForm({ onWordAdded }) {
         </div>
 
         <div className="form-group">
-          <label>Explanation / Example</label>
-          <textarea 
-            value={explanation} 
-            onChange={e => setExplanation(e.target.value)} 
-            placeholder="e.g. The mobile phone, that most ubiquitous of consumer-electronic appliances..."
-            rows="3"
-          />
+          <label>Examples (with Custom Audio URL)</label>
+          <div className="examples-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '10px' }}>
+            {examples.map((ex, index) => (
+              <div key={index} className="example-input-row" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <input 
+                  type="text" 
+                  value={ex.text} 
+                  onChange={e => {
+                    const newEx = [...examples];
+                    newEx[index].text = e.target.value;
+                    setExamples(newEx);
+                  }} 
+                  placeholder="Example sentence" 
+                  style={{ flex: 2, marginBottom: 0 }}
+                />
+                <input 
+                  type="text" 
+                  value={ex.audioUrl} 
+                  onChange={e => {
+                    const newEx = [...examples];
+                    newEx[index].audioUrl = e.target.value;
+                    setExamples(newEx);
+                  }} 
+                  placeholder="MP3 URL (optional)" 
+                  style={{ flex: 1, marginBottom: 0 }}
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setExamples(examples.filter((_, i) => i !== index))}
+                  className="btn-icon"
+                  style={{ color: '#ef4444', padding: '5px' }}
+                  title="Remove"
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+          </div>
+          <button 
+            type="button" 
+            onClick={() => setExamples([...examples, { text: '', audioUrl: '' }])}
+            className="btn-secondary"
+            style={{ fontSize: '0.85rem', padding: '6px 12px', width: 'fit-content' }}
+          >
+            + Add Example
+          </button>
         </div>
 
         <button type="submit" className="btn-primary" disabled={loading}>

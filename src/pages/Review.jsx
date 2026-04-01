@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import { HiOutlineVolumeUp, HiArrowRight, HiArrowLeft, HiRefresh } from 'react-icons/hi';
 import PronunciationButtons from '../components/PronunciationButtons';
+import { playExampleAudio } from '../utils/audio';
 import './Review.css';
 
 export default function Review() {
@@ -120,9 +121,23 @@ export default function Review() {
                    <p className="en-meaning-large"><strong>EN:</strong> {currentWord.enMeaning}</p>
                  )}
                  
-                 {currentWord.explanation && (
+                 {currentWord.examples && currentWord.examples.length > 0 && (
                    <div className="explanation-large">
-                     <p>{currentWord.explanation}</p>
+                     {currentWord.examples.map((ex, index) => {
+                       if (!ex.text) return null;
+                       return (
+                         <div key={`ex-${index}`} className="example-line" onClick={(e) => e.stopPropagation()}>
+                           <button 
+                             className="btn-icon example-play-btn" 
+                             onClick={(e) => { e.stopPropagation(); playExampleAudio(ex.text, ex.audioUrl); }}
+                             title="Listen to example"
+                           >
+                             <HiOutlineVolumeUp size={18} />
+                           </button>
+                           <span>{ex.text}</span>
+                         </div>
+                       );
+                     })}
                    </div>
                  )}
                </div>

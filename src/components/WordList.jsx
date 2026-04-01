@@ -5,6 +5,7 @@ import { doc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import EditWordModal from './EditWordModal';
 import PronunciationButtons from './PronunciationButtons';
+import { playExampleAudio } from '../utils/audio';
 
 export default function WordList({ words, loading }) {
   const [editingWord, setEditingWord] = useState(null);
@@ -79,9 +80,23 @@ export default function WordList({ words, loading }) {
             </div>
           )}
           
-          {wordObj.explanation && (
+          {wordObj.examples && wordObj.examples.length > 0 && (
             <div className="word-explanation">
-              {wordObj.explanation}
+              {wordObj.examples.map((ex, index) => {
+                if (!ex.text) return null;
+                return (
+                  <div key={`ex-${index}`} className="example-line">
+                    <button 
+                      className="btn-icon example-play-btn" 
+                      onClick={(e) => { e.stopPropagation(); playExampleAudio(ex.text, ex.audioUrl); }}
+                      title="Listen to example"
+                    >
+                      <HiOutlineVolumeUp size={16} />
+                    </button>
+                    <span>{ex.text}</span>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

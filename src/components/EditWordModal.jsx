@@ -9,10 +9,10 @@ export default function EditWordModal({ wordObj, onClose }) {
   const [pronunciation, setPronunciation] = useState(wordObj.pronunciation || '');
   const [enMeaning, setEnMeaning] = useState(wordObj.enMeaning || '');
   const [viMeaning, setViMeaning] = useState(wordObj.viMeaning || '');
-  const [explanation, setExplanation] = useState(wordObj.explanation || '');
   const [partOfSpeech, setPartOfSpeech] = useState(wordObj.partOfSpeech || '');
   const [ukAudio, setUkAudio] = useState(wordObj.ukAudio || '');
   const [usAudio, setUsAudio] = useState(wordObj.usAudio || '');
+  const [examples, setExamples] = useState(wordObj.examples || []);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAuth();
 
@@ -31,7 +31,7 @@ export default function EditWordModal({ wordObj, onClose }) {
         usAudio: usAudio.trim(),
         enMeaning: enMeaning.trim(),
         viMeaning: viMeaning.trim(),
-        explanation: explanation.trim(),
+        examples: examples.filter(ex => ex.text.trim() !== ''),
       });
       onClose(); // Đóng Modal thành công
     } catch (error) {
@@ -98,8 +98,52 @@ export default function EditWordModal({ wordObj, onClose }) {
           </div>
 
           <div className="form-group">
-            <label>Explanation / Example</label>
-            <textarea value={explanation} onChange={e => setExplanation(e.target.value)} rows="2" />
+            <label>Examples (with Custom Audio URL)</label>
+            <div className="examples-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '10px', marginTop: '5px' }}>
+              {examples.map((ex, index) => (
+                <div key={index} className="example-input-row" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input 
+                    type="text" 
+                    value={ex.text} 
+                    onChange={e => {
+                      const newEx = [...examples];
+                      newEx[index].text = e.target.value;
+                      setExamples(newEx);
+                    }} 
+                    placeholder="Example sentence" 
+                    style={{ flex: 2, marginBottom: 0 }}
+                  />
+                  <input 
+                    type="text" 
+                    value={ex.audioUrl || ''} 
+                    onChange={e => {
+                      const newEx = [...examples];
+                      newEx[index].audioUrl = e.target.value;
+                      setExamples(newEx);
+                    }} 
+                    placeholder="MP3 URL (optional)" 
+                    style={{ flex: 1, marginBottom: 0 }}
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => setExamples(examples.filter((_, i) => i !== index))}
+                    className="btn-icon"
+                    style={{ color: '#ef4444', padding: '5px' }}
+                    title="Remove"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button 
+              type="button" 
+              onClick={() => setExamples([...examples, { text: '', audioUrl: '' }])}
+              className="btn-secondary"
+              style={{ fontSize: '0.85rem', padding: '6px 12px', width: 'fit-content' }}
+            >
+              + Add Example
+            </button>
           </div>
 
           <div className="modal-actions">
